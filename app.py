@@ -75,7 +75,7 @@ if st.button("🚀 Analyze Resume with AI", type="primary"):
                 4. Final Recommendation (Shortlist / Reject with reasoning)
                 """
                 
-                response = client.models.generate_content(
+        response = client.models.generate_content(
                     model='gemini-3.8-flash',
                     contents=prompt
                 )
