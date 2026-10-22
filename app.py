@@ -49,15 +49,15 @@ st.session_state['resume_text'] = st.text_area(
 
 # Analyze Button
 if st.button("🚀 Analyze Resume with AI", type="primary"):
-    API_KEY = st.secrets["GEMINI_API_KEY"]
-    elif not st.session_state['resume_text'].strip():
-        st.warning("Pehle koi resume upload karo ya text paste karo bhai!")
-    elif not job_description.strip():
-        st.warning("Pehle Job Description toh daalo!")
-    else:
-        with st.spinner("AI is analyzing the resume against the job description..."):
-            try:
-                client = genai.Client(api_key=API_KEY)
+  if not st.session_state.get("resume_text", "").strip():
+    st.warning("Pehle koi resume upload karo ya text paste karo bhai!")
+  elif not job_description.strip():
+    st.warning("Pehle Job Description toh daalo!")
+  else:
+    with st.spinner("AI is analyzing the resume against the job description..."):
+      try:
+        API_KEY = st.secrets["GEMINI_API_KEY"]
+        client = genai.Client(api_key=API_KEY)
                 
                 prompt = f"""
                 You are an expert HR recruiter and ATS system. Analyze the following candidate resume against the provided job description.
