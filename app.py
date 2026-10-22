@@ -1,5 +1,6 @@
 import os
 import streamlit as st
+import pdfplumber
 from google import genai
 
 # Page config
