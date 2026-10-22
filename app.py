@@ -1,5 +1,5 @@
+import os
 import streamlit as st
-import pdfplumber
 from google import genai
 
 # Page config
@@ -7,9 +7,6 @@ st.set_page_config(page_title="AI Resume Analyzer", layout="wide")
 
 st.title("📄 AI Resume Analyzer & Job Matcher")
 st.markdown("### Powered by Gemini AI")
-
-# --- APNI GEMINI API KEY YAHAN EK HI BAAR PASTE KAR DE ---
-API_KEY = "AQ.Ab8RN6IMHIBQbi7Yu7nveKIdKWGQFT3heVAH-isXwbSIWWCDlw"
 
 # Initialize session state for resume text
 if 'resume_text' not in st.session_state:
@@ -47,20 +44,20 @@ st.session_state['resume_text'] = st.text_area(
     height=200
 )
 
-
-    # Analyze Button
+# Analyze Button
 if st.button("🚀 Analyze Resume with AI", type="primary"):
-  if not st.session_state.get("resume_text", "").strip():
-    st.warning("Pehle koi resume upload karo ya text paste karo bhai!")
-  elif not job_description.strip():
-    st.warning("Pehle Job Description toh daalo!")
-  else:
-    with st.spinner("AI is analyzing the resume against the job description..."):
-      try:
-        API_KEY = st.secrets["GEMINI_API_KEY"]
-        client = genai.Client(api_key=API_KEY)
+    if not st.session_state.get("resume_text", "").strip():
+        st.warning("Pehle koi resume upload karo ya text paste karo bhai!")
+    elif not job_description.strip():
+        st.warning("Pehle Job Description toh daalo!")
+    else:
+        with st.spinner("AI is analyzing the resume against the job description..."):
+            try:
+                # Streamlit secrets se secure key fetch kar rahe hain
+                API_KEY = st.secrets["GEMINI_API_KEY"]
+                client = genai.Client(api_key=API_KEY)
 
-        prompt = f"""
+                prompt = f"""
                 You are an expert HR recruiter and ATS system. Analyze the following resume against the job description.
                 
                 Resume:
@@ -70,19 +67,18 @@ if st.button("🚀 Analyze Resume with AI", type="primary"):
                 {job_description}
                 """
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash", contents=prompt
-        )
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash", contents=prompt
+                )
 
-        st.success("Analysis Complete!")
-        st.write(response.text)
+                st.success("Analysis Complete!")
+                st.write(response.text)
 
-      except Exception as e:
-        st.error(f"Error aa gaya bhai: {e}")
+            except Exception as e:
+                st.error(f"Error aa gaya bhai: {e}")
 
 
-
-# ================= AI RESUME BUILDER (UPDATED CODE) =================
+# ================= AI RESUME BUILDER =================
 
 st.markdown("\n")
 st.divider()
@@ -103,9 +99,7 @@ builder_details = st.text_area(
 )
 
 if st.button("🚀 Generate Professional Resume with AI", type="primary", key="generate_resume_btn_custom"):
-    if not API_KEY.strip():
-        st.warning("Bhai, code ke andar `API_KEY` me apni key toh daal!")
-    elif not builder_name.strip():
+    if not builder_name.strip():
         st.warning("Pehle apna naam toh daal bhai!")
     elif not builder_role.strip():
         st.warning("Pehle Target Job Title toh daal bhai!")
@@ -114,7 +108,10 @@ if st.button("🚀 Generate Professional Resume with AI", type="primary", key="g
     else:
         with st.spinner("AI is crafting your professional resume..."):
             try:
-                client = genai.Client(api_key=API_KEY.strip())
+                # Yahan bhi ab Streamlit secrets se secure key uthegi
+                API_KEY = st.secrets["GEMINI_API_KEY"]
+                client = genai.Client(api_key=API_KEY)
+                
                 build_prompt = f"""
                 You are an expert professional resume writer and ATS optimization specialist. 
                 Create a well-structured, highly professional, and ATS-friendly resume based on the following candidate information:
@@ -127,7 +124,7 @@ if st.button("🚀 Generate Professional Resume with AI", type="primary", key="g
                 """
                 
                 build_response = client.models.generate_content(
-                    model='gemini-3.8-flash',
+                    model='gemini-2.5-flash',
                     contents=build_prompt
                 )
                 
