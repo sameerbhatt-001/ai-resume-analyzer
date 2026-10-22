@@ -69,7 +69,7 @@ if st.button("🚀 Analyze Resume with AI", type="primary"):
                 """
 
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash", contents=prompt
+                    model="gemini-3.8-flash", contents=prompt
                 )
 
                 st.success("Analysis Complete!")
@@ -125,7 +125,7 @@ if st.button("🚀 Generate Professional Resume with AI", type="primary", key="g
                 """
                 
                 build_response = client.models.generate_content(
-                    model='gemini-2.5-flash',
+                    model='gemini-3.8-flash',
                     contents=build_prompt
                 )
                 
