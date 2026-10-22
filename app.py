@@ -45,9 +45,9 @@ st.session_state['resume_text'] = st.text_area(
     "Resume text will appear here automatically after uploading PDF (You can also edit or paste directly):", 
     value=st.session_state['resume_text'], 
     height=200
-)
 
-# Analyze Button
+
+    # Analyze Button
 if st.button("🚀 Analyze Resume with AI", type="primary"):
   if not st.session_state.get("resume_text", "").strip():
     st.warning("Pehle koi resume upload karo ya text paste karo bhai!")
@@ -58,34 +58,27 @@ if st.button("🚀 Analyze Resume with AI", type="primary"):
       try:
         API_KEY = st.secrets["GEMINI_API_KEY"]
         client = genai.Client(api_key=API_KEY)
-                
+
         prompt = f"""
-                You are an expert HR recruiter and ATS system. Analyze the following candidate resume against the provided job description.
+                You are an expert HR recruiter and ATS system. Analyze the following resume against the job description.
+                
+                Resume:
+                {st.session_state['resume_text']}
                 
                 Job Description:
                 {job_description}
-                
-                Candidate Resume:
-                {st.session_state['resume_text']}
-                
-                Provide a detailed evaluation containing:
-                1. Match Score out of 10
-                2. Key Strengths of the candidate regarding this role
-                3. Missing Skills or Weaknesses
-                4. Final Recommendation (Shortlist / Reject with reasoning)
                 """
-                
+
         response = client.models.generate_content(
-                    model='gemini-3.8-flash',
-                    contents=prompt
-                )
-                
-                st.success("Analysis Complete!")
-                st.markdown("### 📊 AI Evaluation Report")
-                st.markdown(response.text)
-                
-            except Exception as e:
-                st.error(f"Error aa gaya bhai: {e}")
+            model="gemini-2.5-flash", contents=prompt
+        )
+
+        st.success("Analysis Complete!")
+        st.write(response.text)
+
+      except Exception as e:
+        st.error(f"Error aa gaya bhai: {e}")
+
 
 
 # ================= AI RESUME BUILDER (UPDATED CODE) =================
