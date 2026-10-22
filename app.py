@@ -49,8 +49,7 @@ st.session_state['resume_text'] = st.text_area(
 
 # Analyze Button
 if st.button("🚀 Analyze Resume with AI", type="primary"):
-    if API_KEY == "AQ.Ab8RN6IMHIBQbi7Yu7nveKIdKWGQFT3heVAH-isXwbSIWWCDlw" or not API_KEY.strip():
-        st.warning("Bhai, code ke andar `API_KEY` wali line me apni asli Gemini API Key toh daal de pehle!")
+API_KEY = st.secrets["GEMINI_API_KEY"]
     elif not st.session_state['resume_text'].strip():
         st.warning("Pehle koi resume upload karo ya text paste karo bhai!")
     elif not job_description.strip():
