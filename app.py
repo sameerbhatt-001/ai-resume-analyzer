@@ -45,6 +45,7 @@ st.session_state['resume_text'] = st.text_area(
     "Resume text will appear here automatically after uploading PDF (You can also edit or paste directly):", 
     value=st.session_state['resume_text'], 
     height=200
+)
 
 
     # Analyze Button
