@@ -59,7 +59,7 @@ if st.button("🚀 Analyze Resume with AI", type="primary"):
         API_KEY = st.secrets["GEMINI_API_KEY"]
         client = genai.Client(api_key=API_KEY)
                 
-                prompt = f"""
+        prompt = f"""
                 You are an expert HR recruiter and ATS system. Analyze the following candidate resume against the provided job description.
                 
                 Job Description:
