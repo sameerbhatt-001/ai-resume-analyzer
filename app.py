@@ -80,6 +80,22 @@ if st.button("🚀 Analyze Resume with AI", type="primary"):
 
 
 # ================= AI RESUME BUILDER =================
+from fpdf import FPDF
+
+# PDF Generation function
+def create_pdf(text):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=11)
+    
+    # Text ko lines me tod kar PDF me likhna
+    for line in text.split('\n'):
+        # Multi_cell use karte hain taaki text page se bahar na jaye
+        pdf.multi_cell(0, 8, txt=line.encode('latin-1', 'replace').decode('latin-1'))
+        
+    return pdf.output(dest='S').encode('latin1')
+
+# ================= AI RESUME BUILDER =================
 
 st.markdown("\n")
 st.divider()
@@ -109,7 +125,6 @@ if st.button("🚀 Generate Professional Resume with AI", type="primary", key="g
     else:
         with st.spinner("AI is crafting your professional resume..."):
             try:
-                # Yahan bhi ab Streamlit secrets se secure key uthegi
                 API_KEY = st.secrets["GEMINI_API_KEY"]
                 client = genai.Client(api_key=API_KEY)
                 
@@ -125,7 +140,7 @@ if st.button("🚀 Generate Professional Resume with AI", type="primary", key="g
                 """
                 
                 build_response = client.models.generate_content(
-                    model='gemini-3.8-flash',
+                    model='gemini-2.5-flash',
                     contents=build_prompt
                 )
                 
@@ -139,10 +154,15 @@ if st.button("🚀 Generate Professional Resume with AI", type="primary", key="g
 
 if 'generated_resume' in st.session_state and st.session_state['generated_resume']:
     file_prefix = builder_name.replace(' ', '_') if builder_name.strip() else "Candidate"
+    
+    # PDF bytes generate karne ke liye function call
+    pdf_bytes = create_pdf(st.session_state['generated_resume'])
+    
     st.download_button(
-        label="📥 Download Generated Resume (.txt)",
-        data=st.session_state['generated_resume'],
-        file_name=f"{file_prefix}_Resume.txt",
-        mime="text/plain",
-        key="download_gen_resume_custom"
+        label="📥 Download Generated Resume (.pdf)",
+        data=pdf_bytes,
+        file_name=f"{file_prefix}_Resume.pdf",
+        mime="application/pdf",
+        key="download_gen_resume_custom_pdf"
     )
+
